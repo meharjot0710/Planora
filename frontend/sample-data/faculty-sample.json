@@ -1,0 +1,52 @@
+[
+  {
+    "facultyId": "FAC001",
+    "name": "Dr. John Smith",
+    "email": "john.smith@university.edu",
+    "department": "Computer Science",
+    "designation": "Professor",
+    "phone": "+1-555-0123",
+    "office": "CS-101",
+    "subjects": ["Data Structures", "Algorithms", "Machine Learning"]
+  },
+  {
+    "facultyId": "FAC002",
+    "name": "Dr. Sarah Johnson",
+    "email": "sarah.johnson@university.edu",
+    "department": "Computer Science",
+    "designation": "Associate Professor",
+    "phone": "+1-555-0124",
+    "office": "CS-102",
+    "subjects": ["Database Systems", "Software Engineering"]
+  },
+  {
+    "facultyId": "FAC003",
+    "name": "Dr. Michael Brown",
+    "email": "michael.brown@university.edu",
+    "department": "Mathematics",
+    "designation": "Professor",
+    "phone": "+1-555-0125",
+    "office": "MATH-201",
+    "subjects": ["Calculus", "Linear Algebra", "Statistics"]
+  },
+  {
+    "facultyId": "FAC004",
+    "name": "Dr. Emily Davis",
+    "email": "emily.davis@university.edu",
+    "department": "Physics",
+    "designation": "Assistant Professor",
+    "phone": "+1-555-0126",
+    "office": "PHYS-301",
+    "subjects": ["Quantum Physics", "Thermodynamics"]
+  },
+  {
+    "facultyId": "FAC005",
+    "name": "Dr. Robert Wilson",
+    "email": "robert.wilson@university.edu",
+    "department": "Computer Science",
+    "designation": "Professor",
+    "phone": "+1-555-0127",
+    "office": "CS-103",
+    "subjects": ["Computer Networks", "Cybersecurity", "Operating Systems"]
+  }
+]

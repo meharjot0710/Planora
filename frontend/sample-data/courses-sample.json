@@ -1,0 +1,122 @@
+[
+  {
+    "courseId": "CS101",
+    "courseCode": "CS101",
+    "courseName": "Introduction to Programming",
+    "department": "Computer Science",
+    "credits": 3,
+    "semester": "Fall",
+    "year": 2024,
+    "faculty": "FAC001",
+    "description": "Basic programming concepts using Python and Java",
+    "prerequisites": []
+  },
+  {
+    "courseId": "CS102",
+    "courseCode": "CS102",
+    "courseName": "Data Structures and Algorithms",
+    "department": "Computer Science",
+    "credits": 4,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC001",
+    "description": "Fundamental data structures and algorithm design",
+    "prerequisites": ["CS101"]
+  },
+  {
+    "courseId": "CS201",
+    "courseCode": "CS201",
+    "courseName": "Database Systems",
+    "department": "Computer Science",
+    "credits": 3,
+    "semester": "Fall",
+    "year": 2024,
+    "faculty": "FAC002",
+    "description": "Introduction to database design and SQL",
+    "prerequisites": ["CS102"]
+  },
+  {
+    "courseId": "CS202",
+    "courseCode": "CS202",
+    "courseName": "Software Engineering",
+    "department": "Computer Science",
+    "credits": 3,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC002",
+    "description": "Software development lifecycle and methodologies",
+    "prerequisites": ["CS201"]
+  },
+  {
+    "courseId": "CS301",
+    "courseCode": "CS301",
+    "courseName": "Computer Networks",
+    "department": "Computer Science",
+    "credits": 3,
+    "semester": "Fall",
+    "year": 2024,
+    "faculty": "FAC005",
+    "description": "Network protocols and communication systems",
+    "prerequisites": ["CS102"]
+  },
+  {
+    "courseId": "CS302",
+    "courseCode": "CS302",
+    "courseName": "Machine Learning",
+    "department": "Computer Science",
+    "credits": 4,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC001",
+    "description": "Introduction to machine learning algorithms",
+    "prerequisites": ["CS102", "MATH201"]
+  },
+  {
+    "courseId": "MATH101",
+    "courseCode": "MATH101",
+    "courseName": "Calculus I",
+    "department": "Mathematics",
+    "credits": 4,
+    "semester": "Fall",
+    "year": 2024,
+    "faculty": "FAC003",
+    "description": "Differential and integral calculus",
+    "prerequisites": []
+  },
+  {
+    "courseId": "MATH201",
+    "courseCode": "MATH201",
+    "courseName": "Linear Algebra",
+    "department": "Mathematics",
+    "credits": 3,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC003",
+    "description": "Vector spaces and linear transformations",
+    "prerequisites": ["MATH101"]
+  },
+  {
+    "courseId": "PHYS101",
+    "courseCode": "PHYS101",
+    "courseName": "General Physics I",
+    "department": "Physics",
+    "credits": 4,
+    "semester": "Fall",
+    "year": 2024,
+    "faculty": "FAC004",
+    "description": "Mechanics, waves, and thermodynamics",
+    "prerequisites": ["MATH101"]
+  },
+  {
+    "courseId": "PHYS102",
+    "courseCode": "PHYS102",
+    "courseName": "General Physics II",
+    "department": "Physics",
+    "credits": 4,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC004",
+    "description": "Electricity, magnetism, and optics",
+    "prerequisites": ["PHYS101"]
+  }
+]
