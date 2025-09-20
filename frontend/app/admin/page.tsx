@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import CSVUpload from '../components/CSVUpload';
-import { LogOut, Users, Calendar, Upload } from 'lucide-react';
+import JSONUpload from '../components/JSONUpload';
+import { LogOut, Users, Calendar, Upload, Database } from 'lucide-react';
 
 interface TimetableEntry {
   subject: string;
@@ -16,7 +17,7 @@ interface TimetableEntry {
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState<'upload' | 'timetable'>('upload');
+  const [currentView, setCurrentView] = useState<'upload' | 'timetable' | 'json-upload'>('upload');
   const [timetableData, setTimetableData] = useState<TimetableEntry[]>([]);
 
   const handleLogin = (credentials: { username: string; password: string }) => {
@@ -75,6 +76,17 @@ export default function AdminPage() {
               Upload CSV
             </button>
             <button
+              onClick={() => setCurrentView('json-upload')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                currentView === 'json-upload'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <Database className="h-5 w-5 inline mr-2" />
+              Upload JSON
+            </button>
+            <button
               onClick={() => setCurrentView('timetable')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 currentView === 'timetable'
@@ -93,6 +105,8 @@ export default function AdminPage() {
       <main>
         {currentView === 'upload' ? (
           <CSVUpload onUpload={handleCSVUpload} />
+        ) : currentView === 'json-upload' ? (
+          <JSONUpload />
         ) : (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="bg-white shadow rounded-lg">

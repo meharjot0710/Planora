@@ -1,0 +1,122 @@
+[
+  {
+    "roomId": "ROOM001",
+    "roomNumber": "CS-101",
+    "building": "Computer Science Building",
+    "floor": 1,
+    "capacity": 50,
+    "roomType": "lecture",
+    "facilities": ["Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM002",
+    "roomNumber": "CS-102",
+    "building": "Computer Science Building",
+    "floor": 1,
+    "capacity": 30,
+    "roomType": "lecture",
+    "facilities": ["Smart Board", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM003",
+    "roomNumber": "CS-201",
+    "building": "Computer Science Building",
+    "floor": 2,
+    "capacity": 40,
+    "roomType": "lecture",
+    "facilities": ["Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM004",
+    "roomNumber": "CS-LAB-101",
+    "building": "Computer Science Building",
+    "floor": 1,
+    "capacity": 25,
+    "roomType": "lab",
+    "facilities": ["25 Computers", "Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM005",
+    "roomNumber": "CS-LAB-102",
+    "building": "Computer Science Building",
+    "floor": 1,
+    "capacity": 20,
+    "roomType": "lab",
+    "facilities": ["20 Computers", "Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM006",
+    "roomNumber": "MATH-201",
+    "building": "Mathematics Building",
+    "floor": 2,
+    "capacity": 60,
+    "roomType": "lecture",
+    "facilities": ["Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM007",
+    "roomNumber": "MATH-202",
+    "building": "Mathematics Building",
+    "floor": 2,
+    "capacity": 35,
+    "roomType": "lecture",
+    "facilities": ["Smart Board", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM008",
+    "roomNumber": "PHYS-301",
+    "building": "Physics Building",
+    "floor": 3,
+    "capacity": 45,
+    "roomType": "lecture",
+    "facilities": ["Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM009",
+    "roomNumber": "PHYS-LAB-301",
+    "building": "Physics Building",
+    "floor": 3,
+    "capacity": 20,
+    "roomType": "lab",
+    "facilities": ["Physics Equipment", "Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM010",
+    "roomNumber": "AUD-001",
+    "building": "Main Auditorium",
+    "floor": 1,
+    "capacity": 200,
+    "roomType": "lecture",
+    "facilities": ["Large Projector", "Sound System", "Stage", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM011",
+    "roomNumber": "CONF-101",
+    "building": "Administration Building",
+    "floor": 1,
+    "capacity": 15,
+    "roomType": "conference",
+    "facilities": ["Video Conferencing", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  },
+  {
+    "roomId": "ROOM012",
+    "roomNumber": "SEM-201",
+    "building": "Computer Science Building",
+    "floor": 2,
+    "capacity": 12,
+    "roomType": "seminar",
+    "facilities": ["Projector", "Whiteboard", "Air Conditioning", "WiFi"],
+    "isAvailable": true
+  }
+]
