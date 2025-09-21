@@ -9,7 +9,11 @@
     "year": 1,
     "phone": "+1-555-1001",
     "address": "123 University Ave, Campus Town",
-    "courses": ["CS101", "CS102", "MATH101"]
+    "courses": [
+      "CS101",
+      "CS102",
+      "MATH101"
+    ]
   },
   {
     "studentId": "STU002",
@@ -21,7 +25,11 @@
     "year": 1,
     "phone": "+1-555-1002",
     "address": "456 College St, Campus Town",
-    "courses": ["CS101", "CS102", "MATH101"]
+    "courses": [
+      "CS101",
+      "CS102",
+      "MATH101"
+    ]
   },
   {
     "studentId": "STU003",
@@ -33,7 +41,12 @@
     "year": 2,
     "phone": "+1-555-1003",
     "address": "789 Campus Dr, Campus Town",
-    "courses": ["CS201", "CS202", "CS203", "MATH201"]
+    "courses": [
+      "CS201",
+      "CS202",
+      "CS203",
+      "MATH201"
+    ]
   },
   {
     "studentId": "STU004",
@@ -45,7 +58,11 @@
     "year": 1,
     "phone": "+1-555-1004",
     "address": "321 Academic Way, Campus Town",
-    "courses": ["MATH101", "MATH102", "PHYS101"]
+    "courses": [
+      "MATH101",
+      "MATH102",
+      "PHYS101"
+    ]
   },
   {
     "studentId": "STU005",
@@ -57,7 +74,12 @@
     "year": 3,
     "phone": "+1-555-1005",
     "address": "654 Scholar St, Campus Town",
-    "courses": ["CS301", "CS302", "CS303", "CS304"]
+    "courses": [
+      "CS301",
+      "CS302",
+      "CS303",
+      "CS304"
+    ]
   },
   {
     "studentId": "STU006",
@@ -69,6 +91,10 @@
     "year": 1,
     "phone": "+1-555-1006",
     "address": "987 Science Blvd, Campus Town",
-    "courses": ["PHYS101", "PHYS102", "MATH101"]
+    "courses": [
+      "PHYS101",
+      "PHYS102",
+      "MATH101"
+    ]
   }
 ]
