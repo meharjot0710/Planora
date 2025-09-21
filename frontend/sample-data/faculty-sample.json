@@ -7,7 +7,12 @@
     "designation": "Professor",
     "phone": "+1-555-0123",
     "office": "CS-101",
-    "subjects": ["Data Structures", "Algorithms", "Machine Learning"]
+    "subjects": [
+      "Data Structures",
+      "Algorithms",
+      "Machine Learning"
+    ],
+    "max_hours_per_week": 20
   },
   {
     "facultyId": "FAC002",
@@ -17,7 +22,11 @@
     "designation": "Associate Professor",
     "phone": "+1-555-0124",
     "office": "CS-102",
-    "subjects": ["Database Systems", "Software Engineering"]
+    "subjects": [
+      "Database Systems",
+      "Software Engineering"
+    ],
+    "max_hours_per_week": 18
   },
   {
     "facultyId": "FAC003",
@@ -27,7 +36,12 @@
     "designation": "Professor",
     "phone": "+1-555-0125",
     "office": "MATH-201",
-    "subjects": ["Calculus", "Linear Algebra", "Statistics"]
+    "subjects": [
+      "Calculus",
+      "Linear Algebra",
+      "Statistics"
+    ],
+    "max_hours_per_week": 22
   },
   {
     "facultyId": "FAC004",
@@ -37,7 +51,11 @@
     "designation": "Assistant Professor",
     "phone": "+1-555-0126",
     "office": "PHYS-301",
-    "subjects": ["Quantum Physics", "Thermodynamics"]
+    "subjects": [
+      "Quantum Physics",
+      "Thermodynamics"
+    ],
+    "max_hours_per_week": 16
   },
   {
     "facultyId": "FAC005",
@@ -47,6 +65,11 @@
     "designation": "Professor",
     "phone": "+1-555-0127",
     "office": "CS-103",
-    "subjects": ["Computer Networks", "Cybersecurity", "Operating Systems"]
+    "subjects": [
+      "Computer Networks",
+      "Cybersecurity",
+      "Operating Systems"
+    ],
+    "max_hours_per_week": 20
   }
 ]

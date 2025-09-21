@@ -5,6 +5,7 @@
     "courseName": "Introduction to Programming",
     "department": "Computer Science",
     "credits": 3,
+    "weeklyLectures": 3,
     "semester": "Fall",
     "year": 2024,
     "faculty": "FAC001",
@@ -17,11 +18,14 @@
     "courseName": "Data Structures and Algorithms",
     "department": "Computer Science",
     "credits": 4,
+    "weeklyLectures": 4,
     "semester": "Spring",
     "year": 2024,
     "faculty": "FAC001",
     "description": "Fundamental data structures and algorithm design",
-    "prerequisites": ["CS101"]
+    "prerequisites": [
+      "CS101"
+    ]
   },
   {
     "courseId": "CS201",
@@ -29,11 +33,14 @@
     "courseName": "Database Systems",
     "department": "Computer Science",
     "credits": 3,
+    "weeklyLectures": 3,
     "semester": "Fall",
     "year": 2024,
     "faculty": "FAC002",
     "description": "Introduction to database design and SQL",
-    "prerequisites": ["CS102"]
+    "prerequisites": [
+      "CS102"
+    ]
   },
   {
     "courseId": "CS202",
@@ -41,11 +48,14 @@
     "courseName": "Software Engineering",
     "department": "Computer Science",
     "credits": 3,
+    "weeklyLectures": 3,
     "semester": "Spring",
     "year": 2024,
     "faculty": "FAC002",
     "description": "Software development lifecycle and methodologies",
-    "prerequisites": ["CS201"]
+    "prerequisites": [
+      "CS201"
+    ]
   },
   {
     "courseId": "CS301",
@@ -53,11 +63,14 @@
     "courseName": "Computer Networks",
     "department": "Computer Science",
     "credits": 3,
+    "weeklyLectures": 3,
     "semester": "Fall",
     "year": 2024,
     "faculty": "FAC005",
     "description": "Network protocols and communication systems",
-    "prerequisites": ["CS102"]
+    "prerequisites": [
+      "CS102"
+    ]
   },
   {
     "courseId": "CS302",
@@ -65,11 +78,15 @@
     "courseName": "Machine Learning",
     "department": "Computer Science",
     "credits": 4,
+    "weeklyLectures": 4,
     "semester": "Spring",
     "year": 2024,
     "faculty": "FAC001",
     "description": "Introduction to machine learning algorithms",
-    "prerequisites": ["CS102", "MATH201"]
+    "prerequisites": [
+      "CS102",
+      "MATH201"
+    ]
   },
   {
     "courseId": "MATH101",
@@ -77,6 +94,7 @@
     "courseName": "Calculus I",
     "department": "Mathematics",
     "credits": 4,
+    "weeklyLectures": 4,
     "semester": "Fall",
     "year": 2024,
     "faculty": "FAC003",
@@ -89,11 +107,14 @@
     "courseName": "Linear Algebra",
     "department": "Mathematics",
     "credits": 3,
+    "weeklyLectures": 3,
     "semester": "Spring",
     "year": 2024,
     "faculty": "FAC003",
     "description": "Vector spaces and linear transformations",
-    "prerequisites": ["MATH101"]
+    "prerequisites": [
+      "MATH101"
+    ]
   },
   {
     "courseId": "PHYS101",
@@ -101,11 +122,14 @@
     "courseName": "General Physics I",
     "department": "Physics",
     "credits": 4,
+    "weeklyLectures": 4,
     "semester": "Fall",
     "year": 2024,
     "faculty": "FAC004",
     "description": "Mechanics, waves, and thermodynamics",
-    "prerequisites": ["MATH101"]
+    "prerequisites": [
+      "MATH101"
+    ]
   },
   {
     "courseId": "PHYS102",
@@ -113,10 +137,73 @@
     "courseName": "General Physics II",
     "department": "Physics",
     "credits": 4,
+    "weeklyLectures": 4,
     "semester": "Spring",
     "year": 2024,
     "faculty": "FAC004",
     "description": "Electricity, magnetism, and optics",
-    "prerequisites": ["PHYS101"]
+    "prerequisites": [
+      "PHYS101"
+    ]
+  },
+  {
+    "courseId": "CS203",
+    "courseCode": "CS203",
+    "courseName": "Operating Systems",
+    "department": "Computer Science",
+    "credits": 3,
+    "weeklyLectures": 3,
+    "semester": "Fall",
+    "year": 2023,
+    "faculty": "FAC005",
+    "description": "Introduction to operating systems principles",
+    "prerequisites": [
+      "CS102"
+    ]
+  },
+  {
+    "courseId": "CS303",
+    "courseCode": "CS303",
+    "courseName": "Cybersecurity",
+    "department": "Computer Science",
+    "credits": 3,
+    "weeklyLectures": 3,
+    "semester": "Fall",
+    "year": 2022,
+    "faculty": "FAC005",
+    "description": "Fundamentals of network and computer security",
+    "prerequisites": [
+      "CS301"
+    ]
+  },
+  {
+    "courseId": "CS304",
+    "courseCode": "CS304",
+    "courseName": "Distributed Systems",
+    "department": "Computer Science",
+    "credits": 4,
+    "weeklyLectures": 4,
+    "semester": "Spring",
+    "year": 2023,
+    "faculty": "FAC005",
+    "description": "Architectures and algorithms for distributed computing",
+    "prerequisites": [
+      "CS202"
+    ]
+  },
+  {
+    "courseId": "MATH102",
+    "courseCode": "MATH102",
+    "courseName": "Calculus II",
+    "department": "Mathematics",
+    "credits": 4,
+    "weeklyLectures": 4,
+    "semester": "Spring",
+    "year": 2024,
+    "faculty": "FAC003",
+    "description": "Advanced topics in calculus",
+    "prerequisites": [
+      "MATH101"
+    ]
   }
 ]
