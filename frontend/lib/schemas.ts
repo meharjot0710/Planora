@@ -9,7 +9,7 @@ const facultySchema = new mongoose.Schema({
   designation: { type: String, required: true },
   phone: { type: String },
   office: { type: String },
-  max_hours_week : { type: Number},
+  max_hours_per_week: { type: Number},
   subjects: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
@@ -26,7 +26,7 @@ const studentSchema = new mongoose.Schema({
   year: { type: Number, required: true },
   phone: { type: String },
   address: { type: String },
-  courses: [{ type: [String] }],
+  courses: [String],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
@@ -38,7 +38,7 @@ const courseSchema = new mongoose.Schema({
   courseName: { type: String, required: true },
   department: { type: String, required: true },
   credits: { type: Number, required: true },
-  weeklylecture: { type: Number, required:true},
+  weeklyLectures: { type: Number, required: true},
   semester: { type: String, required: true },
   year: { type: Number, required: true },
   faculty: { type: String }, // Faculty ID
@@ -78,6 +78,7 @@ export interface FacultyType {
   designation: string;
   phone?: string;
   office?: string;
+  max_hours_per_week?: number;
   subjects?: string[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -94,7 +95,7 @@ export interface StudentType {
   year: number;
   phone?: string;
   address?: string;
-  courses?: string[];
+  courses: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -106,6 +107,7 @@ export interface CourseType {
   courseName: string;
   department: string;
   credits: number;
+  weeklyLectures: number;
   semester: string;
   year: number;
   faculty?: string;

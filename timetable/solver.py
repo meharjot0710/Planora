@@ -60,12 +60,12 @@ NUM_WORKERS = 8
 
 #     # ---------- Constraints ----------
 
-#     # 1) Each student must attend exact weekly_lectures
+#     # 1) Each student must attend exact weeklyLectures
 #     for s in student_ids:
 #         for c in students_map[s].get("courses", []):
 #             if c not in course_ids:
 #                 continue
-#             needed = courses_map[c].get("weekly_lectures", 1)
+#             needed = courses_map[c].get("weeklyLectures", 1)
 #             vars_sc = [a[(ss, cc, t, r)] for (ss, cc, t, r) in a if ss == s and cc == c]
 #             if vars_sc:
 #                 model.Add(sum(vars_sc) == needed)
@@ -203,7 +203,7 @@ NUM_WORKERS = 8
 #     # Example constraints: student-course count
 #     for s in student_ids:
 #         for c in students_map[s].get("courses", []):
-#             needed = courses_map[c].get("weekly_lectures", 1)
+#             needed = courses_map[c].get("weeklyLectures", 1)
 #             vars_sc = [a[(ss, cc, t, r)] for (ss, cc, t, r) in a if ss==s and cc==c]
 #             if vars_sc:
 #                 model.Add(sum(vars_sc) == needed)
@@ -298,7 +298,8 @@ def run_solver(courses, students, faculty, rooms):
 
     # 1️⃣ Create session variables z[c,t,r]
     for c in course_ids:
-        ctype = courses_map[c].get("type", "lecture")  # default type
+        # For now, assume all courses are lectures since schema doesn't have type field
+        ctype = "lecture"  # default type
         for t in timeslots:
             for r in room_ids:
                 rtype = rooms_map[r]["roomType"]
@@ -308,23 +309,51 @@ def run_solver(courses, students, faculty, rooms):
 
     # 2️⃣ Create student attendance variables a[s,c,t,r]
     for s in student_ids:
-        for c in students_map[s].get("courses", []):
-            if c not in course_ids:
-                continue
-            for t in timeslots:
-                for r in room_ids:
-                    if (c, t, r) in z:
-                        a[(s, c, t, r)] = model.NewBoolVar(f"a_{s}_{c}_{t}_{r}")
+        student_courses = students_map[s].get("courses", [])
+        if isinstance(student_courses, list):
+            # Flatten the courses list in case it's nested
+            flat_courses = []
+            for course in student_courses:
+                if isinstance(course, list):
+                    flat_courses.extend(course)
+                else:
+                    flat_courses.append(course)
+            
+            for c in flat_courses:
+                if c not in course_ids:
+                    continue
+                for t in timeslots:
+                    for r in room_ids:
+                        if (c, t, r) in z:
+                            a[(s, c, t, r)] = model.NewBoolVar(f"a_{s}_{c}_{t}_{r}")
+        else:
+            print(f"Warning: Student {s} courses is not a list: {student_courses}")
 
     # 3️⃣ Constraints
 
     # 3a) Each student must attend exactly the number of weekly lectures
     for s in student_ids:
-        for c in students_map[s].get("courses", []):
-            needed = courses_map[c].get("weekly_lectures", 1)
-            vars_sc = [a[(ss, cc, t, r)] for (ss, cc, t, r) in a if ss==s and cc==c]
-            if vars_sc:
-                model.Add(sum(vars_sc) == needed)
+        student_courses = students_map[s].get("courses", [])
+        print(f"Student {s} courses: {student_courses}, type: {type(student_courses)}")
+        if isinstance(student_courses, list):
+            # Flatten the courses list in case it's nested
+            flat_courses = []
+            for course in student_courses:
+                if isinstance(course, list):
+                    flat_courses.extend(course)
+                else:
+                    flat_courses.append(course)
+            
+            for c in flat_courses:
+                if c in courses_map:
+                    needed = courses_map[c].get("weeklyLectures", 1)
+                    vars_sc = [a[(ss, cc, t, r)] for (ss, cc, t, r) in a if ss==s and cc==c]
+                    if vars_sc:
+                        model.Add(sum(vars_sc) == needed)
+                else:
+                    print(f"Warning: Course {c} not found in courses_map")
+        else:
+            print(f"Warning: Student {s} courses is not a list: {student_courses}")
 
     # 3b) If student attends, session exists
     for (s,c,t,r), var in a.items():

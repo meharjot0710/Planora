@@ -70,7 +70,8 @@ export async function POST(request: NextRequest) {
             }
             count++;
           } catch (error) {
-            errors.push(`Faculty ${item.facultyId || item.name}: ${error.message}`);
+            console.error('Faculty creation error:', error);
+            errors.push(`Faculty ${item.facultyId || item.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
         break;
@@ -99,7 +100,8 @@ export async function POST(request: NextRequest) {
             }
             count++;
           } catch (error) {
-            errors.push(`Student ${item.studentId || item.name}: ${error.message}`);
+            console.error('Student creation error:', error);
+            errors.push(`Student ${item.studentId || item.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
         break;
@@ -127,7 +129,8 @@ export async function POST(request: NextRequest) {
             }
             count++;
           } catch (error) {
-            errors.push(`Course ${item.courseId || item.courseName}: ${error.message}`);
+            console.error('Course creation error:', error);
+            errors.push(`Course ${item.courseId || item.courseName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
         break;
@@ -155,7 +158,8 @@ export async function POST(request: NextRequest) {
             }
             count++;
           } catch (error) {
-            errors.push(`Room ${item.roomId || item.roomNumber}: ${error.message}`);
+            console.error('Room creation error:', error);
+            errors.push(`Room ${item.roomId || item.roomNumber}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
         break;
@@ -180,8 +184,16 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Upload error:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : 'Unknown'
+    });
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

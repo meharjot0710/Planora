@@ -28,7 +28,7 @@ def format_timetable_for_db(sessions):
         day = s["day"].lower()
         timetable.setdefault(room, {}).setdefault(day, []).append({
             "time": f"{s['startTime']} - {s['endTime']}",
-            "faculties": s["facultiesId"],
+            "faculties": s.get("facultyId", "Unknown"),  # Use facultyId instead of facultiesId
             "courseId": s["courseId"]
         })
     return timetable
@@ -42,12 +42,24 @@ def create_or_update_timetable():
     faculties = list(db.faculties.find())
     rooms = list(db.rooms.find())
 
+    print(f"📊 Data loaded: {len(courses)} courses, {len(students)} students, {len(faculties)} faculties, {len(rooms)} rooms")
+    
+    # Debug: Print sample data structure
+    if students:
+        print(f"Sample student data: {students[0]}")
+    if courses:
+        print(f"Sample course data: {courses[0]}")
+
     if not courses or not students or not faculties or not rooms:
         print("❌ One or more collections are empty. Cannot run solver.")
         return
 
     # Run solver with DB data
     raw_sessions, validation = run_solver(courses, students, faculties, rooms)
+    
+    print(f"🔍 Solver returned {len(raw_sessions)} sessions")
+    if raw_sessions:
+        print(f"Sample session: {raw_sessions[0]}")
 
     # Format to timetable schema
     formatted = format_timetable_for_db(raw_sessions)
