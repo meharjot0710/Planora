@@ -67,7 +67,6 @@ export default function CSVUpload({ onUpload }: CSVUploadProps) {
         try {
           const data = results.data as any[];
           
-          // Validate CSV structure
           const requiredFields = ['subject', 'teacher', 'room', 'day', 'startTime', 'endTime'];
           const hasRequiredFields = requiredFields.every(field => 
             data.length > 0 && data[0].hasOwnProperty(field)
@@ -77,7 +76,6 @@ export default function CSVUpload({ onUpload }: CSVUploadProps) {
             throw new Error(`CSV must contain the following columns: ${requiredFields.join(', ')}`);
           }
 
-          // Validate data
           const validData: TimetableEntry[] = data.map((row, index) => {
             if (!row.subject || !row.teacher || !row.room || !row.day || !row.startTime || !row.endTime) {
               throw new Error(`Row ${index + 2} is missing required data`);
