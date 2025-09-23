@@ -1,308 +1,240 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, User } from 'lucide-react';
+import React, { useState, useEffect } from "react";
 
-interface TimetableEntry {
-  id: string;
-  subject: string;
-  teacher: string;
-  room: string;
-  day: string;
-  startTime: string;
-  endTime: string;
-  color: string;
-}
+const SLOTS = [
+  { id: "S1", label: "09:00 - 10:00" },
+  { id: "S2", label: "10:00 - 11:00" },
+  { id: "S3", label: "11:00 - 12:00" },
+  { id: "S4", label: "12:00 - 14:00" },
+  { id: "S5", label: "14:00 - 15:00" },
+  { id: "S6", label: "15:00 - 16:00" },
+];
 
-interface TimetableProps {
-  role: 'teacher' | 'user';
-  userId?: string;
-}
+const DAYS = ["mon", "tue", "wed", "thu", "fri"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-const sampleTimetable: TimetableEntry[] = [
-  {
-    id: '1',
-    subject: 'Mathematics',
-    teacher: 'Mr. Smith',
-    room: 'Room 101',
-    day: 'Monday',
-    startTime: '09:00',
-    endTime: '10:00',
-    color: 'bg-blue-500'
-  },
-  {
-    id: '2',
-    subject: 'English Literature',
-    teacher: 'Ms. Johnson',
-    room: 'Room 102',
-    day: 'Monday',
-    startTime: '10:15',
-    endTime: '11:15',
-    color: 'bg-green-500'
-  },
-  {
-    id: '3',
-    subject: 'Physics',
-    teacher: 'Dr. Brown',
-    room: 'Lab 201',
-    day: 'Monday',
-    startTime: '11:30',
-    endTime: '12:30',
-    color: 'bg-purple-500'
-  },
-  {
-    id: '4',
-    subject: 'History',
-    teacher: 'Prof. Davis',
-    room: 'Room 103',
-    day: 'Tuesday',
-    startTime: '09:00',
-    endTime: '10:00',
-    color: 'bg-yellow-500'
-  },
-  {
-    id: '5',
-    subject: 'Chemistry',
-    teacher: 'Dr. Wilson',
-    room: 'Lab 202',
-    day: 'Tuesday',
-    startTime: '10:15',
-    endTime: '11:15',
-    color: 'bg-red-500'
-  },
-  {
-    id: '6',
-    subject: 'Physical Education',
-    teacher: 'Coach Taylor',
-    room: 'Gymnasium',
-    day: 'Wednesday',
-    startTime: '09:00',
-    endTime: '10:00',
-    color: 'bg-orange-500'
-  },
-  {
-    id: '7',
-    subject: 'Computer Science',
-    teacher: 'Ms. Garcia',
-    room: 'Computer Lab',
-    day: 'Wednesday',
-    startTime: '10:15',
-    endTime: '11:15',
-    color: 'bg-indigo-500'
-  },
-  {
-    id: '8',
-    subject: 'Art',
-    teacher: 'Ms. Martinez',
-    room: 'Art Studio',
-    day: 'Thursday',
-    startTime: '09:00',
-    endTime: '10:00',
-    color: 'bg-pink-500'
-  },
-  {
-    id: '9',
-    subject: 'Biology',
-    teacher: 'Dr. Anderson',
-    room: 'Lab 203',
-    day: 'Thursday',
-    startTime: '10:15',
-    endTime: '11:15',
-    color: 'bg-teal-500'
-  },
-  {
-    id: '10',
-    subject: 'Geography',
-    teacher: 'Mr. Thompson',
-    room: 'Room 104',
-    day: 'Friday',
-    startTime: '09:00',
-    endTime: '10:00',
-    color: 'bg-cyan-500'
+// Helper function to map time to slot
+const getSlotFromTime = (time: string) => {
+  const timeMap: { [key: string]: string } = {
+    "09:00 - 10:00": "S1",
+    "10:00 - 11:00": "S2", 
+    "11:00 - 12:00": "S3",
+    "12:00 - 14:00": "S4",
+    "14:00 - 15:00": "S5",
+    "15:00 - 16:00": "S6"
+  };
+  return timeMap[time] || null;
+};
+
+// Transform MongoDB data to component format
+const transformScheduleData = (scheduleData: any) => {
+  const transformedGrid: any = {};
+  
+  // Initialize all days
+  DAYS.forEach(day => {
+    transformedGrid[day] = {};
+    SLOTS.forEach(slot => {
+      transformedGrid[day][slot.id] = null;
+    });
+  });
+
+  // Fill in the actual schedule data
+  if (scheduleData) {
+    Object.keys(scheduleData).forEach(roomId => {
+      const roomSchedule = scheduleData[roomId];
+      Object.keys(roomSchedule).forEach(day => {
+        if (transformedGrid[day]) {
+          roomSchedule[day].forEach((slot: any) => {
+            const slotId = getSlotFromTime(slot.time);
+            if (slotId && transformedGrid[day][slotId] === null) {
+              transformedGrid[day][slotId] = {
+                course: slot.course?.courseName || slot.courseId,
+                faculty: slot.faculty?.name || slot.faculties,
+                room: roomId,
+                type: "Lecture",
+                batches: ["B1"]
+              };
+            }
+          });
+        }
+      });
+    });
   }
-];
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const timeSlots = [
-  '09:00', '09:15', '09:30', '09:45',
-  '10:00', '10:15', '10:30', '10:45',
-  '11:00', '11:15', '11:30', '11:45',
-  '12:00', '12:15', '12:30', '12:45',
-  '13:00', '13:15', '13:30', '13:45',
-  '14:00', '14:15', '14:30', '14:45',
-  '15:00', '15:15', '15:30', '15:45',
-  '16:00'
-];
+  return transformedGrid;
+};
 
-export default function Timetable({ role, userId }: TimetableProps) {
-  const [timetable, setTimetable] = useState<TimetableEntry[]>(sampleTimetable);
-  const [selectedDay, setSelectedDay] = useState<string>('Monday');
-  const [viewMode, setViewMode] = useState<'week' | 'day'>('week');
+function Cell({ cell, compact = false, tone = "soft" }: { cell: any; compact?: boolean; tone?: string }) {
+  if (!cell)
+    return <div className={`p-2 ${compact ? 'text-[11px]' : 'text-sm'} text-gray-500`}>—</div>;
 
-  const getTimetableForDay = (day: string) => {
-    return timetable.filter(entry => entry.day === day);
+  // Subject-based palette; tone: soft | medium | dark
+  const SUBJECT_COLORS = {
+    calculus: "sky",
+    physics: "violet",
+    programming: "emerald",
+    algorithms: "amber",
+    dbms: "rose",
   };
+  const subjectKey = String(cell.course || "").toLowerCase();
+  const base = (SUBJECT_COLORS as any)[subjectKey] || "gray";
 
-  const getTimetableForRole = () => {
-    if (role === 'teacher') {
-      // Filter by teacher name (in a real app, this would be based on logged-in teacher)
-      return timetable.filter(entry => entry.teacher === 'Mr. Smith');
-    }
-    return timetable; // For students, show all classes
-  };
+  let bgClass = "";
+  let borderClass = "";
+  let isDark = false;
+  if (tone === "dark") {
+    bgClass = `bg-${base}-600`;
+    borderClass = `border-${base}-700`;
+    isDark = true;
+  } else if (tone === "medium") {
+    bgClass = `bg-${base}-100`;
+    borderClass = `border-${base}-200`;
+  } else {
+    bgClass = `bg-${base}-50`;
+    borderClass = `border-${base}-100`;
+  }
 
-  const filteredTimetable = viewMode === 'day' ? getTimetableForDay(selectedDay) : getTimetableForRole();
-
-  const getTimeSlotPosition = (time: string) => {
-    const timeIndex = timeSlots.indexOf(time);
-    return timeIndex * 4; // Each time slot is 4rem (64px) high
-  };
-
-  const getDuration = (startTime: string, endTime: string) => {
-    const startIndex = timeSlots.indexOf(startTime);
-    const endIndex = timeSlots.indexOf(endTime);
-    return (endIndex - startIndex) * 4; // Height in rem
-  };
+  const subtleText = isDark ? "text-white/80" : "text-gray-600";
+  const strongText = isDark ? "text-white" : "text-gray-700";
+  const badgeBorder = isDark ? "border-white/30 text-white" : "border text-gray-700";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Calendar className="h-6 w-6 text-gray-600 mr-2" />
-              <h1 className="text-2xl font-bold text-gray-900">
-                {role === 'teacher' ? 'My Teaching Schedule' : 'My Class Schedule'}
-              </h1>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setViewMode('week')}
-                className={`px-3 py-1 text-sm font-medium rounded-md ${
-                  viewMode === 'week'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Week View
-              </button>
-              <button
-                onClick={() => setViewMode('day')}
-                className={`px-3 py-1 text-sm font-medium rounded-md ${
-                  viewMode === 'day'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Day View
-              </button>
+    <div className={`p-2 rounded-md border ${bgClass} ${borderClass} ${compact ? 'text-[12px]' : ''} ${isDark ? 'text-white' : ''}`}>
+      <div className="flex items-center justify-between">
+        <div className={`text-sm font-semibold leading-tight ${strongText}`}>{cell.course}</div>
+        <div className={`text-xs font-mono ${subtleText}`}>{cell.room}</div>
+      </div>
+      <div className={`text-xs mt-1 ${subtleText}`}>{cell.faculty}</div>
+      <div className="text-xs mt-2 flex items-center gap-2">
+        <div className={`px-2 py-0.5 text-[11px] rounded-full ${badgeBorder}`}>{cell.type}</div>
+        <div className={`text-[11px] ${subtleText}`}>{cell.batches.join(", ")}</div>
+      </div>
+    </div>
+  );
+}
+
+export function TimetableGridMinimal({ grid, title, subtitle, compact = false, tone = "soft" }: { grid: any; title?: string; subtitle?: string; compact?: boolean; tone?: string }) {
+  return (
+    <div className="bg-white shadow-none border rounded-lg">
+      <div className="p-6">
+        <div className="mb-4">
+          <div className="text-center">
+            <div className="inline-block bg-white px-6 py-3 rounded-sm shadow-sm border border-gray-200">
+              <div className="text-xl font-semibold">{title || "School / Class"}</div>
+              {subtitle ? (
+                <div className="mt-1 text-sm text-gray-600">{subtitle}</div>
+              ) : null}
             </div>
           </div>
         </div>
 
-        {viewMode === 'day' && (
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex space-x-2">
-              {days.map((day) => (
-                <button
-                  key={day}
-                  onClick={() => setSelectedDay(day)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md ${
-                    selectedDay === day
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {day}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="p-6">
-          {viewMode === 'week' ? (
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              {days.map((day) => {
-                const dayTimetable = getTimetableForDay(day);
-                return (
-                  <div key={day} className="bg-gray-50 rounded-lg p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-                      {day}
-                    </h3>
-                    <div className="space-y-3">
-                      {dayTimetable.length === 0 ? (
-                        <p className="text-gray-500 text-sm text-center">No classes</p>
-                      ) : (
-                        dayTimetable.map((entry) => (
-                          <div
-                            key={entry.id}
-                            className={`${entry.color} text-white p-3 rounded-lg shadow-sm`}
-                          >
-                            <div className="font-medium text-sm">{entry.subject}</div>
-                            <div className="text-xs opacity-90 mt-1">
-                              <div className="flex items-center">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {entry.startTime} - {entry.endTime}
-                              </div>
-                              <div className="flex items-center mt-1">
-                                <MapPin className="h-3 w-3 mr-1" />
-                                {entry.room}
-                              </div>
-                              {role === 'user' && (
-                                <div className="flex items-center mt-1">
-                                  <User className="h-3 w-3 mr-1" />
-                                  {entry.teacher}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {selectedDay} Schedule
-              </h3>
-              {filteredTimetable.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No classes scheduled for {selectedDay}</p>
-              ) : (
-                <div className="space-y-3">
-                  {filteredTimetable.map((entry) => (
-                    <div
-                      key={entry.id}
-                      className={`${entry.color} text-white p-4 rounded-lg shadow-sm`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="font-medium text-lg">{entry.subject}</div>
-                        <div className="text-sm opacity-90">
-                          {entry.startTime} - {entry.endTime}
-                        </div>
-                      </div>
-                      <div className="mt-2 text-sm opacity-90">
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          {entry.room}
-                        </div>
-                        {role === 'user' && (
-                          <div className="flex items-center mt-1">
-                            <User className="h-4 w-4 mr-2" />
-                            {entry.teacher}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+        <div className="overflow-auto">
+          <table className={`w-full table-fixed border-collapse ${compact ? 'text-[12px]' : ''}`}>
+            <thead>
+              <tr>
+                <th className="w-36 sticky left-0 bg-gray-50 z-10 border p-2 text-gray-700">Time</th>
+                {DAY_LABELS.map((d, index) => (
+                  <th key={d} className="border p-2 text-left text-gray-700">{d}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {SLOTS.map((slot) => (
+                <tr key={slot.id}>
+                  <td className="sticky left-0 bg-gray-50 z-10 border p-2 align-top text-sm text-gray-700">{slot.label}</td>
+                  {DAYS.map((d, index) => (
+                  <td key={`${d}-${slot.id}`} className="border p-2 align-top align-middle" style={{ minWidth: 140 }}>
+                      <Cell cell={grid?.[d]?.[slot.id] ?? null} compact={compact} tone={tone} />
+                    </td>
                   ))}
-                </div>
-              )}
-            </div>
-          )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+
+        {/* Legend and actions removed per request */}
+      </div>
+    </div>
+  );
+}
+
+export default function ConflictFreeTimetableMinimalDesign() {
+  const [timetableData, setTimetableData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTimetable = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/timetable');
+        const result = await response.json();
+        
+        if (response.ok) {
+          setTimetableData(result.data);
+        } else {
+          setError(result.error || 'Failed to fetch timetable');
+        }
+      } catch (err) {
+        setError('Failed to fetch timetable');
+        console.error('Error fetching timetable:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimetable();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white shadow rounded-lg p-8 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-500">Loading timetable...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white shadow rounded-lg p-8 text-center">
+            <p className="text-red-600">Error: {error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!timetableData) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white shadow rounded-lg p-8 text-center">
+            <p className="text-gray-500">No timetable data available</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const transformedGrid = transformScheduleData(timetableData.schedule);
+
+  return (
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto">
+        <TimetableGridMinimal 
+          grid={transformedGrid} 
+          title="Class Timetable" 
+          subtitle={`Last updated: ${new Date(timetableData.updatedAt).toLocaleDateString()}`}
+        />
       </div>
     </div>
   );

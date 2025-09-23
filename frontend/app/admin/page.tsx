@@ -4,7 +4,9 @@ import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import CSVUpload from '../components/CSVUpload';
 import JSONUpload from '../components/JSONUpload';
-import { LogOut, Users, Calendar, Upload, Database } from 'lucide-react';
+import DataViewer from '../components/DataViewer';
+import { LogOut, Users, Calendar, Upload, Database, Edit } from 'lucide-react';
+import Timetable from '../components/Timetable';
 
 interface TimetableEntry {
   subject: string;
@@ -17,7 +19,7 @@ interface TimetableEntry {
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState<'upload' | 'timetable' | 'json-upload'>('upload');
+  const [currentView, setCurrentView] = useState<'view-data' | 'timetable' | 'json-upload' | 'edit-data'>('edit-data');
   const [timetableData, setTimetableData] = useState<TimetableEntry[]>([]);
 
   const handleLogin = (credentials: { username: string; password: string }) => {
@@ -26,8 +28,13 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setCurrentView('upload');
+    setCurrentView('view-data');
     setTimetableData([]);
+  };
+
+  const handleDataChange = () => {
+    // Refresh data when changes are made
+    console.log('Data changed, refreshing...');
   };
 
   const handleCSVUpload = (data: TimetableEntry[]) => {
@@ -65,17 +72,6 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             <button
-              onClick={() => setCurrentView('upload')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                currentView === 'upload'
-                  ? 'border-red-500 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <Upload className="h-5 w-5 inline mr-2" />
-              Upload CSV
-            </button>
-            <button
               onClick={() => setCurrentView('json-upload')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 currentView === 'json-upload'
@@ -85,6 +81,17 @@ export default function AdminPage() {
             >
               <Database className="h-5 w-5 inline mr-2" />
               Upload JSON
+            </button>
+            <button
+              onClick={() => setCurrentView('edit-data')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                currentView === 'edit-data'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <Edit className="h-5 w-5 inline mr-2" />
+              Edit Data
             </button>
             <button
               onClick={() => setCurrentView('timetable')}
@@ -103,96 +110,100 @@ export default function AdminPage() {
 
       {/* Main Content */}
       <main>
-        {currentView === 'upload' ? (
+        {currentView === 'view-data' ? (
           <CSVUpload onUpload={handleCSVUpload} />
         ) : currentView === 'json-upload' ? (
           <JSONUpload />
+        ) : currentView === 'edit-data' ? (
+          <DataViewer onDataChange={handleDataChange} />
         ) : (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">Timetable Overview</h2>
-                <p className="text-gray-600 mt-1">
-                  {timetableData.length > 0 
-                    ? `Viewing ${timetableData.length} timetable entries`
-                    : 'No timetable data available. Please upload a CSV file first.'
-                  }
-                </p>
-              </div>
+          <Timetable
+          />
+          // <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          //   <div className="bg-white shadow rounded-lg">
+          //     <div className="px-6 py-4 border-b border-gray-200">
+          //       <h2 className="text-2xl font-bold text-gray-900">Timetable Overview</h2>
+          //       <p className="text-gray-600 mt-1">
+          //         {timetableData.length > 0 
+          //           ? `Viewing ${timetableData.length} timetable entries`
+          //           : 'No timetable data available. Please upload a CSV file first.'
+          //         }
+          //       </p>
+          //     </div>
               
-              {timetableData.length > 0 ? (
-                <div className="p-6">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Subject
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Teacher
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Room
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Day
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Start Time
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            End Time
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {timetableData.map((entry, index) => (
-                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {entry.subject}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.teacher}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.room}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.day}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.startTime}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.endTime}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-6 text-center">
-                  <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No timetable data</h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Upload a CSV file to view the timetable data here.
-                  </p>
-                  <div className="mt-6">
-                    <button
-                      onClick={() => setCurrentView('upload')}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload CSV
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          //     {timetableData.length > 0 ? (
+          //       <div className="p-6">
+          //         <div className="overflow-x-auto">
+          //           <table className="min-w-full divide-y divide-gray-200">
+          //             <thead className="bg-gray-50">
+          //               <tr>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   Subject
+          //                 </th>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   Teacher
+          //                 </th>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   Room
+          //                 </th>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   Day
+          //                 </th>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   Start Time
+          //                 </th>
+          //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          //                   End Time
+          //                 </th>
+          //               </tr>
+          //             </thead>
+          //             <tbody className="bg-white divide-y divide-gray-200">
+          //               {timetableData.map((entry, index) => (
+          //                 <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+          //                     {entry.subject}
+          //                   </td>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          //                     {entry.teacher}
+          //                   </td>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          //                     {entry.room}
+          //                   </td>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          //                     {entry.day}
+          //                   </td>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          //                     {entry.startTime}
+          //                   </td>
+          //                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          //                     {entry.endTime}
+          //                   </td>
+          //                 </tr>
+          //               ))}
+          //             </tbody>
+          //           </table>
+          //         </div>
+          //       </div>
+          //     ) : (
+          //       <div className="p-6 text-center">
+          //         <Calendar className="mx-auto h-12 w-12 text-gray-400" />
+          //         <h3 className="mt-2 text-sm font-medium text-gray-900">No timetable data</h3>
+          //         <p className="mt-1 text-sm text-gray-500">
+          //           Upload a CSV file to view the timetable data here.
+          //         </p>
+          //         <div className="mt-6">
+          //           <button
+          //             onClick={() => setCurrentView('view-data')}
+          //             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          //           >
+          //             <Upload className="h-4 w-4 mr-2" />
+          //             Upload CSV
+          //           </button>
+          //         </div>
+          //       </div>
+          //     )}
+          //   </div>
+          // </div>
         )}
       </main>
     </div>

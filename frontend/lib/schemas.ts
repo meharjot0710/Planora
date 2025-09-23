@@ -62,11 +62,33 @@ const roomSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
+// Timetable Schema
+const timetableSchema = new mongoose.Schema({
+  schedule: {
+    type: Map,
+    of: {
+      type: Map,
+      of: [{
+        time: { type: String, required: true },
+        faculties: { type: String, required: true },
+        courseId: { type: String, required: true }
+      }]
+    }
+  },
+  validation: {
+    type: Map,
+    of: mongoose.Schema.Types.Mixed
+  },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
 // Create models
 export const Faculty = mongoose.models.Faculty || mongoose.model('Faculty', facultySchema);
 export const Student = mongoose.models.Student || mongoose.model('Student', studentSchema);
 export const Course = mongoose.models.Course || mongoose.model('Course', courseSchema);
 export const Room = mongoose.models.Room || mongoose.model('Room', roomSchema);
+export const Timetable = mongoose.models.Timetable || mongoose.model('Timetable', timetableSchema);
 
 // Type definitions for TypeScript
 export interface FacultyType {
@@ -127,6 +149,20 @@ export interface RoomType {
   roomType: 'lecture' | 'lab' | 'seminar' | 'conference' | 'other';
   facilities?: string[];
   isAvailable?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface TimetableSlot {
+  time: string;
+  faculties: string;
+  courseId: string;
+}
+
+export interface TimetableType {
+  _id?: string;
+  schedule: Map<string, Map<string, TimetableSlot[]>>;
+  validation?: Map<string, any>;
   createdAt?: Date;
   updatedAt?: Date;
 }
