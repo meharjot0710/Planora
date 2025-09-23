@@ -28,7 +28,7 @@ const getSlotFromTime = (time: string) => {
 };
 
 // Transform MongoDB data to component format
-const transformScheduleData = (scheduleData: any) => {
+const transformScheduleData = (scheduleData: any, filterType: string = 'all', filterValue: string = '') => {
   const transformedGrid: any = {};
   
   // Initialize all days
@@ -43,14 +43,27 @@ const transformScheduleData = (scheduleData: any) => {
   if (scheduleData) {
     Object.keys(scheduleData).forEach(roomId => {
       const roomSchedule = scheduleData[roomId];
+      
+      // Apply room filter
+      if (filterType === 'room' && filterValue && roomId !== filterValue) {
+        return;
+      }
+      
       Object.keys(roomSchedule).forEach(day => {
         if (transformedGrid[day]) {
           roomSchedule[day].forEach((slot: any) => {
             const slotId = getSlotFromTime(slot.time);
+            const facultyName = slot.faculty?.name || slot.faculties;
+            
+            // Apply faculty filter
+            if (filterType === 'faculty' && filterValue && facultyName !== filterValue) {
+              return;
+            }
+            
             if (slotId && transformedGrid[day][slotId] === null) {
               transformedGrid[day][slotId] = {
                 course: slot.course?.courseName || slot.courseId,
-                faculty: slot.faculty?.name || slot.faculties,
+                faculty: facultyName,
                 room: roomId,
                 type: "Lecture",
                 batches: ["B1"]
@@ -121,10 +134,7 @@ export function TimetableGridMinimal({ grid, title, subtitle, compact = false, t
         <div className="mb-4">
           <div className="text-center">
             <div className="inline-block bg-white px-6 py-3 rounded-sm shadow-sm border border-gray-200">
-              <div className="text-xl font-semibold">{title || "School / Class"}</div>
-              {subtitle ? (
-                <div className="mt-1 text-sm text-gray-600">{subtitle}</div>
-              ) : null}
+              <div className="text-xl text-black font-semibold">{title || "School / Class"}</div>
             </div>
           </div>
         </div>
@@ -164,6 +174,10 @@ export default function ConflictFreeTimetableMinimalDesign() {
   const [timetableData, setTimetableData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<'all' | 'room' | 'faculty'>('all');
+  const [filterValue, setFilterValue] = useState<string>('');
+  const [availableRooms, setAvailableRooms] = useState<string[]>([]);
+  const [availableFaculties, setAvailableFaculties] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchTimetable = async () => {
@@ -174,6 +188,26 @@ export default function ConflictFreeTimetableMinimalDesign() {
         
         if (response.ok) {
           setTimetableData(result.data);
+          
+          // Extract available rooms and faculties for filtering
+          if (result.data && result.data.schedule) {
+            const rooms = Object.keys(result.data.schedule);
+            setAvailableRooms(rooms);
+            
+            const faculties = new Set<string>();
+            Object.values(result.data.schedule).forEach((roomSchedule: any) => {
+              Object.values(roomSchedule).forEach((daySlots: any) => {
+                daySlots.forEach((slot: any) => {
+                  if (slot.faculty && slot.faculty.name) {
+                    faculties.add(slot.faculty.name);
+                  } else if (slot.faculties) {
+                    faculties.add(slot.faculties);
+                  }
+                });
+              });
+            });
+            setAvailableFaculties(Array.from(faculties));
+          }
         } else {
           setError(result.error || 'Failed to fetch timetable');
         }
@@ -225,14 +259,81 @@ export default function ConflictFreeTimetableMinimalDesign() {
     );
   }
 
-  const transformedGrid = transformScheduleData(timetableData.schedule);
+  const transformedGrid = transformScheduleData(timetableData.schedule, filterType, filterValue);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
+        {/* Filter Controls */}
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">Filter by:</label>
+              <select
+                value={filterType}
+                onChange={(e) => {
+                  setFilterType(e.target.value as 'all' | 'room' | 'faculty');
+                  setFilterValue('');
+                }}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All</option>
+                <option value="room">Room</option>
+                <option value="faculty">Faculty</option>
+              </select>
+            </div>
+
+            {filterType === 'room' && (
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Room:</label>
+                <select
+                  value={filterValue}
+                  onChange={(e) => setFilterValue(e.target.value)}
+                  className="px-3 py-2 border text-black border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a room</option>
+                  {availableRooms.map(room => (
+                    <option key={room} value={room}>{room}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {filterType === 'faculty' && (
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Faculty:</label>
+                <select
+                  value={filterValue}
+                  onChange={(e) => setFilterValue(e.target.value)}
+                  className="px-3 py-2 border text-black border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a faculty</option>
+                  {availableFaculties.map(faculty => (
+                    <option key={faculty} value={faculty}>{faculty}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {(filterType === 'room' || filterType === 'faculty') && filterValue && (
+              <button
+                onClick={() => {
+                  setFilterType('all');
+                  setFilterValue('');
+                }}
+                className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 underline"
+              >
+                Clear Filter
+              </button>
+            )}
+          </div>
+        </div>
+
         <TimetableGridMinimal 
           grid={transformedGrid} 
-          title="Class Timetable" 
+          title={filterType === 'all' ? "Class Timetable" : 
+                 filterType === 'room' ? `Timetable for Room: ${filterValue}` :
+                 `Timetable for Faculty: ${filterValue}`}
           subtitle={`Last updated: ${new Date(timetableData.updatedAt).toLocaleDateString()}`}
         />
       </div>
