@@ -45,6 +45,8 @@ export default function TeacherPage() {
       <main>
         <Timetable role="teacher" />
       </main>
+      <input type="textbox" placeholder="Submit your request to admin" className="w-full p-2 border border-gray-300 rounded-md mt-4 mb-24 text-black" />
+      <button className="bg-blue-500 text-white p-2 rounded-md">Submit</button>
     </div>
   );
 }

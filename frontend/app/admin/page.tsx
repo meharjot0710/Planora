@@ -7,6 +7,7 @@ import JSONUpload from '../components/JSONUpload';
 import DataViewer from '../components/DataViewer';
 import { LogOut, Users, Calendar, Upload, Database, Edit } from 'lucide-react';
 import Timetable from '../components/Timetable';
+import Requests from '../components/Requests';
 
 interface TimetableEntry {
   subject: string;
@@ -19,7 +20,7 @@ interface TimetableEntry {
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState<'view-data' | 'timetable' | 'json-upload' | 'edit-data'>('edit-data');
+  const [currentView, setCurrentView] = useState<'view-data' | 'timetable' | 'json-upload' | 'edit-data' | 'requests'>('edit-data');
   const [timetableData, setTimetableData] = useState<TimetableEntry[]>([]);
 
   const handleLogin = (credentials: { username: string; password: string }) => {
@@ -104,6 +105,17 @@ export default function AdminPage() {
               <Calendar className="h-5 w-5 inline mr-2" />
               View Timetable
             </button>
+            <button
+              onClick={() => setCurrentView('requests')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                currentView === 'requests'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <Calendar className="h-5 w-5 inline mr-2" />
+              View Requests
+            </button>
           </div>
         </div>
       </nav>
@@ -116,6 +128,8 @@ export default function AdminPage() {
           <JSONUpload />
         ) : currentView === 'edit-data' ? (
           <DataViewer onDataChange={handleDataChange} />
+        ) : currentView === 'requests' ? (
+          <Requests />
         ) : (
           <Timetable
           />
