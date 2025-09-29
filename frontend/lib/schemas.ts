@@ -162,7 +162,7 @@ export interface TimetableSlot {
 export interface TimetableType {
   _id?: string;
   schedule: Map<string, Map<string, TimetableSlot[]>>;
-  validation?: Map<string, any>;
+  validation?: Map<string, unknown>;
   createdAt?: Date;
   updatedAt?: Date;
 }

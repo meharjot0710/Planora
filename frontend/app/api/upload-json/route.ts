@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '../../../lib/mongodb';
-import { Faculty, Student, Course, Room } from '../../../lib/schemas';
+import connectDB from '@/lib/mongodb';
+import { Faculty, Student, Course, Room } from '@/lib/schemas';
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     let count = 0;
-    let errors: string[] = [];
+    const errors: string[] = [];
 
     // Process data based on type
     switch (type) {
@@ -169,7 +169,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare response
-    const response: any = {
+    const response: {
+      message: string;
+      count: number;
+      type: string;
+      errors?: string[];
+    } = {
       message: `Successfully processed ${count} ${type} records`,
       count,
       type

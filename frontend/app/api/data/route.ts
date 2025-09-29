@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '../../../lib/mongodb';
-import { Faculty, Student, Course, Room } from '../../../lib/schemas';
+import connectDB from '@/lib/mongodb';
+import { Faculty, Student, Course, Room } from '@/lib/schemas';
 
 export async function GET(request: NextRequest) {
   try {

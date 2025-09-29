@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '../../../lib/mongodb';
-import { Course, Faculty } from '../../../lib/schemas';
+import connectDB from '@/lib/mongodb';
+import { Course, Faculty } from '@/lib/schemas';
 import mongoose from 'mongoose';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await connectDB();
 
@@ -48,11 +48,17 @@ export async function GET(request: NextRequest) {
     const facultyMap = new Map(faculties.map(f => [f.facultyId, f]));
 
     // Enrich the schedule with course and faculty details
-    const enrichedSchedule: any = {};
+    const enrichedSchedule: Record<string, Record<string, Array<{
+      time: string;
+      faculties: string;
+      courseId: string;
+      course?: typeof Course;
+      faculty?: typeof Faculty;
+    }>>> = {};
     for (const roomId in scheduleObj) {
       enrichedSchedule[roomId] = {};
       for (const day in scheduleObj[roomId]) {
-        enrichedSchedule[roomId][day] = scheduleObj[roomId][day].map((slot: any) => ({
+        enrichedSchedule[roomId][day] = scheduleObj[roomId][day].map((slot: { time: string; faculties: string; courseId: string }) => ({
           ...slot,
           course: courseMap.get(slot.courseId),
           faculty: facultyMap.get(slot.faculties)
